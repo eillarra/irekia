@@ -8,13 +8,13 @@ irekia
 .. |License| image:: https://img.shields.io/badge/license-MIT-blue.svg
    :target: LICENSE
 
-This package allows you to communicate with the Open Data Euskadi REST API. Use the `irekia` Client to generate
+This package allows you to communicate with the Open Data Euskadi REST API. Use the :code:`irekia` Client to generate
 the convoluted `Open Data Euskadi <http://opendata.euskadi.eus//>`_ query strings and get the data you want.
 
 Installation
 ------------
 
-Install it using `pip`:
+Install it using :code:`pip`:
 
 .. code-block:: shell
 

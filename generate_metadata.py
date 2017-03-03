@@ -30,7 +30,8 @@ class MetadataParser(object):
             family = f.attrib['id'].split('-')[1]
             f_metadata = []
 
-            for m in tree.xpath('(//div[@class="tabbody div_f div_f_%s"])[2]/table/tbody/tr' % family):
+            xpath = '(//div[@class="tabbody div_f div_f_{0}"])[2]/table/tbody/tr'.format(family)
+            for m in tree.xpath(xpath):
                 f_metadata.append(m.findall('./td')[0].text)
 
             f_metadata.sort()
@@ -40,11 +41,12 @@ class MetadataParser(object):
                 content_type = t.attrib['id'].split('-')[1]
                 t_metadata = []
 
-                for ct in tree.xpath('(//div[@class="tabbody div_t div_t_%s"])[2]/table/tbody/tr' % content_type):
+                xpath = '(//div[@class="tabbody div_t div_t_{0}"])[2]/table/tbody/tr'.format(content_type)
+                for ct in tree.xpath(xpath):
                     t_metadata.append(ct.findall('./td')[0].text)
 
                 t_metadata.sort()
-                self.metadata['%s.%s' % (family, content_type)] = t_metadata
+                self.metadata['{0}.{1}'.format(family, content_type)] = t_metadata
 
         return self.metadata
 

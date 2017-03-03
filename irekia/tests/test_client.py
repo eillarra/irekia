@@ -10,7 +10,8 @@ from irekia import Client, get_metadata
 
 class TestClient(TestCase):
 
-    def test__check_typology__valid(self):
+    @staticmethod
+    def test__check_typology__valid():
         Client('opendata', 'estadistica')
 
     def test__check_typology__multiple_families(self):
@@ -28,6 +29,7 @@ class TestClient(TestCase):
 
     def test__get_metadata__valid(self):
         metadata = get_metadata()
+        self.assertTrue(len(metadata) > 0)
         self.assertEqual(
             Client('opendata', 'estadistica').metadata,
             sorted(metadata['__euskadi__'] + metadata['opendata'] + metadata['opendata.estadistica'])

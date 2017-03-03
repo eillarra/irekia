@@ -22,25 +22,30 @@ def _sort_dictionary(dictionary):
 
 
 def get_metadata(cluster='euskadi'):
+    if cluster != 'euskadi':
+        return []
+
     data_file_path = os.path.join(os.path.dirname(__file__), 'data', 'metadata.json')
 
     with open(data_file_path, 'r') as data_file:
         metadata = json.loads(data_file.read())
 
-    return metadata if cluster is 'euskadi' else []
+    return metadata
 
 
 class Client:
     endpoint = 'http://www.euskadi.eus/r01hSearchResultWar/r01hPresentationXML.jsp'
 
-    def __init__(self, families=[], content_types=[], **kwargs):
+    def __init__(self, families=None, content_types=None, **kwargs):
         """Initializes the Open Data Euskadi REST API Client.
 
         Check http://opendata.euskadi.eus/contenidos-generales/-/familias-y-tipos-de-contenido-de-euskadi-net/
         for the available families and content_types."""
         cluster = kwargs.get('cluster', 'euskadi')
+        families = families or []
+        content_types = content_types or []
         self.cluster, self.families, self.content_types = self.__check_typology(cluster, families, content_types)
-        self.metadata = self.__get_metadata()
+        self.metadata = [] if cluster != 'euskadi' else self.__get_metadata()
         self.search_text = None
         self.codified_query_params = {
             'tC': [self.cluster],
@@ -54,7 +59,8 @@ class Client:
             'o': []
         }
 
-    def __check_typology(self, cluster, families, content_types):
+    @staticmethod
+    def __check_typology(cluster, families, content_types):
         """Massages the `family` and `content_type` values and returns the values back."""
         families = [families] if isinstance(families, str) else families
         content_types = [content_types] if isinstance(content_types, str) else content_types
@@ -69,7 +75,7 @@ class Client:
     def __check_metadata(self, metadata):
         """Raises an Exception if a metadata is not valid for the selected family + content_type combo."""
         if metadata not in self.metadata:
-            raise ValueError('Please use a valid metadata: %s' % ', '.join(self.metadata))
+            raise ValueError('Please use a valid metadata: {0}'.format(', '.join(self.metadata)))
         return
 
     def __get_metadata(self):
@@ -79,19 +85,16 @@ class Client:
         exception if not. Checks are only made against the 'euskadi' cluster.
         """
         metadata = get_metadata(self.cluster)
-        metadata_output = []
+        metadata_output = metadata['__euskadi__']
 
-        if metadata:
-            metadata_output = metadata['__euskadi__']
-
-            try:
-                for family in self.families:
-                    metadata_output = metadata_output + metadata[family]
-                    for content_type in self.content_types:
-                        # This will only work if only one family is present
-                        metadata_output = metadata_output + metadata['%s.%s' % (family, content_type)]
-            except KeyError:
-                raise ValueError('Please use a valid family + content_type combo.')
+        try:
+            for family in self.families:
+                metadata_output = metadata_output + metadata[family]
+                for content_type in self.content_types:
+                    # This will only work if only one family is present
+                    metadata_output = metadata_output + metadata['{0}.{1}'.format(family, content_type)]
+        except KeyError:
+            raise ValueError('Please use a valid family + content_type combo.')
 
         metadata_output.sort()
         return metadata_output
@@ -150,7 +153,7 @@ class Client:
         <requests.Response [200]>
         """
         language = kwargs.get('lang', 'es')
-        self.codified_query_params['m'] = ['documentLanguage.EQ.%s' % language]
+        self.codified_query_params['m'] = ['documentLanguage.EQ.{0}'.format(language)]
 
         query_params = {'r01kLang': language}
 
@@ -192,7 +195,7 @@ class Client:
         >>> c = Client('eventos', 'evento').limit(30)
         <Client>
         """
-        self.codified_query_params['pp'] = ['r01PageSize.%d' % limit]
+        self.codified_query_params['pp'] = ['r01PageSize.{0}'.format(limit)]
         return self
 
     def order_by(self, *args):
