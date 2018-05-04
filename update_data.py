@@ -2,7 +2,7 @@
 
 try:
     from lxml import etree
-except:
+except Exception as e:
     import sys
     sys.exit('You need to install the `lxml` package to regenerate the metadata file.')
 

@@ -8,7 +8,7 @@ from collections import OrderedDict
 
 try:
     from urllib import urlencode
-except:
+except Exception as e:
     from urllib.parse import urlencode
 
 
@@ -34,7 +34,7 @@ def get_metadata(cluster='euskadi'):
 
 
 class Client:
-    endpoint = 'http://www.euskadi.eus/r01hSearchResultWar/r01hPresentationXML.jsp'
+    endpoint = 'https://www.euskadi.eus/r01hSearchResultWar/r01hPresentationXML.jsp'
 
     def __init__(self, families=None, content_types=None, **kwargs):
         """Initializes the Open Data Euskadi REST API Client.

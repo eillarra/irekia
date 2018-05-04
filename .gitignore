@@ -1,12 +1,16 @@
 .DS_Store
 ._*
 
-__pycache__/
+__pycache__
 *.py[cod]
 *$py.class
+.mypy_cache
+.vscode
 
 *.egg
 *.egg-info
-.eggs/
-dist/
-docs/_build/
+.coverage
+.pytest_cache
+.tox
+dist
+htmlcov

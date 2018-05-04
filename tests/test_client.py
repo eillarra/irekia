@@ -2,14 +2,13 @@ from unittest import TestCase
 
 try:
     from urllib import urlencode, quote
-except:
+except Exception as e:
     from urllib.parse import urlencode, quote
 
 from irekia import Client, get_metadata
 
 
 class TestClient(TestCase):
-
     @staticmethod
     def test__check_typology__valid():
         Client('opendata', 'estadistica')
