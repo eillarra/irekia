@@ -8,7 +8,7 @@ with open(path.join(path.abspath(path.dirname(__file__)), 'README.md')) as f:
 
 setup(
     name='irekia',
-    version='0.1.1',
+    version='0.1.2',
     author='eillarra',
     author_email='eneko@illarra.com',
     license='MIT',
@@ -19,6 +19,7 @@ setup(
     },
     description='Python client for the Open Data Euskadi REST API.',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     keywords='opendata api euskadi',
     classifiers=[
         'Development Status :: 3 - Alpha',
