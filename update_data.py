@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 try:
+    from defusedxml.lxml import fromstring
     from lxml import etree
 except Exception as e:
     import sys
-    sys.exit('You need to install the `lxml` package to regenerate the metadata file.')
+    sys.exit('You need to install `defusedxml` and `lxml` packages to regenerate the metadata file.')
 
 import json
 import os
@@ -17,7 +18,7 @@ class MetadataParser(object):
 
     def parse(self):
         res = requests.get(self.url)
-        tree = etree.fromstring(res.text, parser=etree.HTMLParser())
+        tree = fromstring(res.text, parser=etree.HTMLParser())
         e_metadata = []
 
         for c in tree.xpath('(//div[@class="tabbody div_c div_c_euskadi"])[1]/table/tbody/tr'):
